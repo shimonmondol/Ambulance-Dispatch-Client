@@ -1,4 +1,5 @@
-import Navbar from "../components/Navbar"
+import Footer from "@/components/Footer"
+import Navbar from "@/components/Navbar"
 import Home from '@/components/Home'
 
 const page = () => {
@@ -6,6 +7,7 @@ const page = () => {
     <div>
       <Navbar/>
       <Home/>
+      <Footer/>
     </div>
   )
 }
