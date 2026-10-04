@@ -10,7 +10,6 @@ import {
   Ambulance,
   Bed,
   HeartHandshake,
-  Mail,
   Clock,
   PhoneCall,
   CheckCircle2,
@@ -60,7 +59,7 @@ export default function Home() {
                 <img
                   src="https://i.ibb.co.com/DhbM5h1/Ambulance.jpg"
                   alt="Emergency Ambulance"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover bg-black/60"
                 />
               </div>
             </div>
