@@ -1,44 +1,46 @@
+// lib/auth.ts (সম্পূর্ণ ফাইল)
+
 import Cookies from "js-cookie";
 
-export type Role = "customer" | "driver" | "admin";
+export type Role = "customer" | "provider" | "admin";
 
 export interface AuthSession {
-  token: string;
-  role: Role;
-  name: string;
-  email: string;
+  token: string | null;
+  role: Role | null;
+  name: string | null;
+  email: string | null;
 }
 
-const TOKEN_KEY = "auth_token";
-const ROLE_KEY = "user_role";
-const USER_KEY = "user_data";
+const COOKIE_NAME = "auth_session";
 
 export const setAuthSession = (session: AuthSession) => {
-  Cookies.set(TOKEN_KEY, session.token, { expires: 7, path: "/" });
-  Cookies.set(ROLE_KEY, session.role, { expires: 7, path: "/" });
-  Cookies.set(USER_KEY, JSON.stringify({ name: session.name, email: session.email }), {
-    expires: 7,
-    path: "/",
+  // যদি name না থাকে, তবে ইমেলের প্রথম অংশকে নাম হিসেবে ব্যবহার করি
+  if (!session.name && session.email) {
+    session.name = session.email.split('@')[0] || "Valued Customer";
+  } else if (!session.name) {
+    session.name = "User"; // একদমই কিছু না থাকলে ডিফল্ট
+  }
+
+  // কুকিতে ডাটা সেভ করি
+  Cookies.set(COOKIE_NAME, JSON.stringify(session), {
+    expires: 1, // ১ দিনের জন্য কুকি ভ্যালিড থাকবে
+    secure: process.env.NODE_ENV === "production", // প্রোডাকশনে শুধুমাত্র HTTPS এ কাজ করবে
+    sameSite: "strict",
   });
 };
 
-export const clearAuthSession = () => {
-  Cookies.remove(TOKEN_KEY, { path: "/" });
-  Cookies.remove(ROLE_KEY, { path: "/" });
-  Cookies.remove(USER_KEY, { path: "/" });
+export const getAuthSession = (): AuthSession => {
+  const sessionData = Cookies.get(COOKIE_NAME);
+  try {
+    return sessionData
+      ? JSON.parse(sessionData)
+      : { token: null, role: null, name: null, email: null };
+  } catch (error) {
+    // যদি কুকির ডাটা কারাপ্ট হয়, তবে এম্পটি সেশন রিটার্ন করি
+    return { token: null, role: null, name: null, email: null };
+  }
 };
 
-export const getAuthSession = (): { token?: string; role?: Role; name?: string; email?: string } => {
-  const token = Cookies.get(TOKEN_KEY);
-  const role = Cookies.get(ROLE_KEY) as Role | undefined;
-  const rawUser = Cookies.get(USER_KEY);
-  let parsedUser = { name: "", email: "" };
-  if (rawUser) {
-    try {
-      parsedUser = JSON.parse(rawUser);
-    } catch {
-      // ignore parse error
-    }
-  }
-  return { token, role, ...parsedUser };
+export const clearAuthSession = () => {
+  Cookies.remove(COOKIE_NAME);
 };

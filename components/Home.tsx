@@ -69,8 +69,19 @@ export default function Home() {
         <section className="py-20 lg:py-24 bg-white">
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              {/* Left Content */}
-              <div className="space-y-6">
+              {/* Left Image */}
+              <div className="relative order-2 lg:order-1">
+                <div className="overflow-hidden rounded-2xl shadow-xl">
+                  <img
+                    src="https://i.ibb.co.com/TDvP2qP5/Ambulance2.jpg"
+                    alt="Paramedics team with patient and ambulance"
+                    className="w-full h-90 md:h-105 object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+
+              {/* Right Content */}
+              <div className="space-y-6 order-1 lg:order-2">
                 <span className="text-xs font-bold tracking-wider text-blue-600 uppercase">
                   About Us
                 </span>
@@ -110,10 +121,10 @@ export default function Home() {
 
                   <div className="flex items-center gap-2.5">
                     <CheckCircle2 className="w-7 h-7 text-blue-600 shrink-0" />
-                     <div>
+                    <div>
                       <h4 className="font-bold text-slate-900 text-sm md:text-base">
                         10,000+
-                      </h4> 
+                      </h4>
                       <p className="text-xs text-slate-500">Lives Supported</p>
                     </div>
                   </div>
@@ -127,20 +138,9 @@ export default function Home() {
                   </button>
                 </div>
               </div>
-                   
-              {/* Right Image */}
-              <div className="relative">
-                <div className="overflow-hidden rounded-2xl shadow-xl">
-                  <img
-                    src="https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=1000&q=80"
-                    alt="Paramedics team with patient and ambulance"
-                    className="w-full h-90 md:h-105 object-cover hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-              </div>
             </div>
           </div>
-        </section> 
+        </section>
 
         {/* Highlights Ribbon */}
         <section className="bg-white border-b border-slate-100 py-10 shadow-sm">

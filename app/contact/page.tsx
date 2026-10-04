@@ -37,7 +37,6 @@ export default function ContactContent() {
   return (
     <main className="w-full bg-slate-50 font-sans text-slate-800">
       {/* ================= 1. HERO BANNER ================= */}
-      <Navbar/>
       <section className="relative overflow-hidden bg-slate-900 py-16 md:py-24 text-white">
         {/* Background Image / Overlay */}
         <div className="absolute inset-0 z-0">
