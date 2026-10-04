@@ -28,8 +28,8 @@ export default function Navbar() {
     setMounted(true);
   }, [syncFromCookies]);
 
-  // Hide Navbar on authentication and dashboard routes
-  const hiddenRoutes = ["/signin", "/signup", "/dashboard", "/provider", "/admin"];
+  // শুধুমাত্র সাইন-ইন ও সাইন-আপ রুটে Navbar লুকানো থাকবে; /customer/dashboard এ দৃশ্যমান থাকবে
+  const hiddenRoutes = ["/signin", "/signup"];
   const shouldHideNavbar = hiddenRoutes.some((route) => pathname.startsWith(route));
 
   if (shouldHideNavbar) {
@@ -52,10 +52,11 @@ export default function Navbar() {
     return "Customer";
   };
 
+  // Customer er jonno dashboard path http://localhost:3000/customer/dashboard
   const getDashboardPath = () => {
     if (role === "admin") return "/admin";
     if (role === "provider") return "/provider";
-    return "/dashboard";
+    return "/customer/dashboard";
   };
 
   // Name fallback: jodi name na pay tobe email theke ba 'Customer'
