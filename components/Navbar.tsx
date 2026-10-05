@@ -62,7 +62,7 @@ export default function Navbar() {
   };
 
   const getDashboardPath = () => {
-    if (role === "admin") return "/admin";
+    if (role === "admin") return "/admin/dashboard";
     if (role === "provider") return "/provider/dashboard";
     return "/customer/dashboard";
   };
