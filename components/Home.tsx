@@ -26,7 +26,7 @@ export default function Home() {
           <section className="relative overflow-hidden bg-slate-50 text-white py-16 lg:py-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
               <div className="lg:col-span-6 space-y-6 mb-20">
-                <span className="inline-block text-xs font-bold tracking-widest text-slate-800 uppercase bg-white/10 px-3 rounded-full backdrop-blur-sm border border-white/10">
+                <span className="inline-block text-xs font-bold tracking-widest text-slate-800 uppercase bg-black/10 px-3 rounded-full backdrop-blur-sm border border-black/10">
                   24/7 Emergency Ambulance{" "}
                   <span className="text-red-400">Dispatch</span>
                 </span>
@@ -67,7 +67,7 @@ export default function Home() {
               </div>
             </div>
           </section>
-          {/* About Section */}
+          {/* Who We Are */}
           <section className="py-20 lg:py-24 bg-white">
             <div className="max-w-7xl mx-auto px-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -81,13 +81,11 @@ export default function Home() {
                     />
                   </div>
                 </div>
-
                 {/* Right Content */}
                 <div className="space-y-6 order-1 lg:order-2">
-                  <span className="text-xs font-bold tracking-wider text-blue-600 uppercase">
-                    About Us
+                  <span className="text-xs font-bold tracking-wider text-red-500 uppercase">
+                    Who We Are
                   </span>
-
                   <h2 className="text-3xl md:text-4xl font-extrabold text-slate-950 leading-tight">
                     Trusted Ambulance Services When It Matters Most
                   </h2>
@@ -134,12 +132,12 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* About Us Button */}
+                  {/* Learn More Button */}
                   <div className="pt-2">
-                    <button className="inline-flex items-center gap-2 px-6 py-3 bg-[#0a2540] hover:bg-[#081e33] text-white font-medium text-sm rounded-lg transition-colors duration-200">
-                      <span>Learn More About Us</span>
+                    <Link href="/about" className="inline-flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-medium text-md rounded-lg transition-colors duration-200 cursor-pointer">
+                      <span>Learn More</span>
                       <ChevronRight className="w-4 h-4" />
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>

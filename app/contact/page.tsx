@@ -255,7 +255,7 @@ export default function ContactContent() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full py-3 px-4 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-md shadow-red-500/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                  className="w-full py-3 px-4 cursor-pointer bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-md shadow-red-500/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
                 >
                   <Send className="w-4 h-4" />
                   <span>Send Message</span>
