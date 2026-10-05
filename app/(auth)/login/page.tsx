@@ -6,9 +6,8 @@ import { Mail, Lock, Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
 import { useAuthStore } from "@/lib/useAuthStore";
 import { toast } from "sonner";
 
-export default function SignInPage() {
+export default function LoginPage() {
   const login = useAuthStore((state) => state.login);
-
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,17 +19,21 @@ export default function SignInPage() {
     e.preventDefault();
 
     if (!formData.identifier || !formData.password) {
-      toast.error("Please fill in all fields");
+      toast.error("Please fill in all fields", {
+        position: "top-center",
+      });
       return;
     }
 
     setLoading(true);
 
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-      if (!backendUrl) {
+      const rawBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      if (!rawBackendUrl) {
         throw new Error("Backend URL is not defined in .env file.");
       }
+
+      const backendUrl = rawBackendUrl.replace(/\/+$/, "");
 
       const res = await fetch(`${backendUrl}/auth/login`, {
         method: "POST",
@@ -44,9 +47,11 @@ export default function SignInPage() {
       });
 
       const data = await res.json();
+
       if (!res.ok) {
-        throw new Error(data?.message || "Invalid email or password");
+        throw new Error("Invalid Email or Password");
       }
+
       const token =
         data?.data?.accessToken ||
         data?.data?.token ||
@@ -54,10 +59,9 @@ export default function SignInPage() {
         data?.token;
 
       if (!token) {
-        throw new Error(
-          data?.message || "Authentication failed: No access token received",
-        );
+        throw new Error("Authentication failed: No access token received");
       }
+
       const customerName =
         data?.data?.name ||
         data?.data?.user?.name ||
@@ -76,6 +80,7 @@ export default function SignInPage() {
         data?.data?.user?.email ||
         formData.identifier;
 
+      // স্টোর ও কুকিতে ডাটা সেভ
       login({
         token,
         role: userRole,
@@ -83,20 +88,26 @@ export default function SignInPage() {
         email: customerEmail,
       });
 
-      toast.success(data?.message || "Signed in successfully!");
-      const targetPath =
-        userRole === "admin"
-          ? "/admin"
-          : userRole === "provider"
-            ? "/provider"
-            : "/";
+      // ৩ সেকেন্ড ডিউরেশন সহ টপ-সেন্টারে সাকসেস টোস্ট
+      toast.success("Login Successful", {
+        position: "top-center",
+        duration: 3000,
+      });
 
-      window.location.href = targetPath;
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 3000);
     } catch (err: any) {
-      toast.error(
-        err.message || "Something went wrong. Please check your credentials.",
-      );
-    } finally {
+      const errorMessage =
+        err.message?.toLowerCase().includes("credential") ||
+        err.message?.toLowerCase().includes("password") ||
+        err.message?.toLowerCase().includes("user not found")
+          ? "Invalid Email or Password"
+          : err.message || "Invalid Email or Password";
+
+      toast.error(errorMessage, {
+        position: "top-center",
+      });
       setLoading(false);
     }
   };
@@ -110,7 +121,7 @@ export default function SignInPage() {
             Welcome Back
           </h2>
           <p className="text-sm text-slate-500 mt-1.5 leading-relaxed">
-            Sign in to your account to request an ambulance, track your ride,
+            Log in to your account to request an ambulance, track your ride,
             and manage your profile.
           </p>
         </div>
@@ -161,7 +172,7 @@ export default function SignInPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition"
+                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition cursor-pointer"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
@@ -173,34 +184,34 @@ export default function SignInPage() {
             </div>
           </div>
 
-          {/* Primary Sign In Button */}
+          {/* Primary Login Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-md shadow-red-200 transition-all active:scale-[0.99] mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-md shadow-red-200 transition-all active:scale-[0.99] mt-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
           >
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Signing In...
+                Logging In...
               </>
             ) : (
               <>
                 <LogIn className="w-4 h-4" />
-                Sign In
+                Log In
               </>
             )}
           </button>
         </form>
 
-        {/* Bottom Create Account Link */}
+        {/* Bottom Register Link */}
         <p className="text-center text-xs text-slate-500 pt-2">
           New in Ambulance Dispatch?{" "}
           <Link
-            href="/signup"
-            className="text-red-600 hover:text-red-700 font-semibold hover:underline"
+            href="/register"
+            className="text-red-600 hover:text-red-700 font-semibold"
           >
-            Create an account
+            Register an account
           </Link>
         </p>
       </div>
