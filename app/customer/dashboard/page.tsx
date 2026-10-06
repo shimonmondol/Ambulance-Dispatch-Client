@@ -43,7 +43,7 @@ export default function CustomerDashboardPage() {
     <>
       <div className="space-y-8 max-w-6xl mx-auto">
         {/* Banner */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-600/90 via-rose-700 to-slate-900 p-6 sm:p-8 border border-white/10 shadow-xl">
+        <div className="relative overflow-hidden rounded-2xl bg-linear-to-r from-red-600/90 via-rose-700 to-slate-900 p-6 sm:p-8 border border-white/10 shadow-xl">
           <div className="relative z-10 max-w-xl space-y-3">
             <span className="inline-block text-[11px] font-extrabold uppercase tracking-wider bg-white/20 text-white px-3 py-1 rounded-full backdrop-blur-sm">
               Emergency & Non-Emergency
