@@ -115,7 +115,6 @@ export default function AboutContent() {
                   <span className="text-red-600">Safer Tomorrow</span>
                 </h2>
               </div>
-
               <div className="space-y-3.5 text-slate-600 text-sm leading-relaxed">
                 <p>
                   Ambulance Dispatch is a 24/7 emergency ambulance service operating
