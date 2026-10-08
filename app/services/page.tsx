@@ -131,7 +131,7 @@ export default function ServicesPage() {
             alt="Ambulance Services"
             className="w-full h-full object-cover object-center opacity-30"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/85 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-900/85 to-transparent" />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-2xl">
@@ -178,31 +178,31 @@ export default function ServicesPage() {
 
             {/* Filter Pills */}
             <div className="flex items-center gap-2 overflow-x-auto pb-1">
-              <span className="text-xs font-bold text-slate-400 flex items-center gap-1 pl-1">
-                <Filter className="w-3.5 h-3.5" /> Filter:
-              </span>
-              {[
-                "ALL",
-                "ICU",
-                "ADVANCED_LIFE_SUPPORT",
-                "BASIC_LIFE_SUPPORT",
-              ].map((type) => (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => handleFilterChange(type)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap ${
-                    selectedType === type
-                      ? "bg-red-600 text-white shadow-sm shadow-red-200"
-                      : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-100"
-                  }`}
-                >
-                  {type === "ALL"
-                    ? "All Ambulances"
-                    : formatAmbulanceType(type)}
-                </button>
-              ))}
-            </div>
+  <span className="text-xs font-bold text-slate-400 flex items-center gap-1 pl-1">
+    <Filter className="w-3.5 h-3.5" /> Filter:
+  </span>
+  {[
+    "ALL",
+    "ICU",
+    "ADVANCED_LIFE_SUPPORT",
+    "BASIC_LIFE_SUPPORT",
+  ].map((type) => (
+    <button
+      key={type}
+      type="button"
+      onClick={() => handleFilterChange(type)}
+      className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap cursor-pointer ${
+        selectedType === type
+          ? "bg-red-600 text-white shadow-sm shadow-red-200"
+          : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-100"
+      }`}
+    >
+      {type === "ALL"
+        ? "All Ambulances"
+        : formatAmbulanceType(type)}
+    </button>
+  ))}
+</div>
           </div>
 
           {/* Loading Indicator */}
@@ -377,7 +377,7 @@ export default function ServicesPage() {
 
                       <Link
                         href={`/services/${item.id}`}
-                        className="flex-1 py-3 px-4 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-md shadow-red-500/20 transition-all hover:scale-[1.01] active:scale-[0.99] text-xs"
+                        className="flex-1 py-3 px-4 bg-linear-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-md shadow-red-500/20 transition-all hover:scale-[1.01] active:scale-[0.99] text-xs"
                       >
                         <span>Ambulance Details</span>
                         <ArrowRight className="w-3.5 h-3.5" />

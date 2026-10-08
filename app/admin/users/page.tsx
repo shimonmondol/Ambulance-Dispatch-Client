@@ -5,16 +5,17 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Users,
   Search,
-  ShieldCheck,
   ShieldAlert,
   UserCheck,
-  Ban,
   CheckCircle2,
   XCircle,
   Loader2,
   AlertCircle,
   ArrowLeft,
   RefreshCw,
+  Shield,
+  Ambulance,
+  User,
 } from "lucide-react";
 import { useAuthStore } from "@/lib/useAuthStore";
 import { toast } from "sonner";
@@ -77,33 +78,7 @@ function AdminUsersContent() {
     enabled: !!token && isAuthenticated,
   });
 
-  // 2. Mutation: Change User Role
-  const { mutate: updateRole, isPending: isUpdatingRole } = useMutation({
-    mutationFn: async ({ userId, newRole }: { userId: string; newRole: string }) => {
-      const res = await fetch(`${API_BASE}/admin/users/${userId}/role`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ role: newRole }),
-      });
-
-      if (!res.ok) {
-        const errJson = await res.json().catch(() => ({}));
-        throw new Error(errJson.message || "Failed to update role");
-      }
-      return res.json();
-    },
-    onSuccess: (data) => {
-      toast.success(data.message || "Role updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
-      queryClient.invalidateQueries({ queryKey: ["adminOverview"] });
-    },
-    onError: (err: any) => toast.error(err.message),
-  });
-
-  // 3. Mutation: Toggle Ban / Suspend
+  // 2. Mutation: Toggle Ban / Suspend
   const { mutate: toggleBan, isPending: isTogglingBan } = useMutation({
     mutationFn: async (userId: string) => {
       const res = await fetch(`${API_BASE}/admin/users/${userId}/toggle-ban`, {
@@ -127,7 +102,7 @@ function AdminUsersContent() {
     onError: (err: any) => toast.error(err.message),
   });
 
-  // 4. Mutation: Toggle Verification Status
+  // 3. Mutation: Toggle Verification Status
   const { mutate: toggleVerify } = useMutation({
     mutationFn: async ({
       userId,
@@ -158,17 +133,46 @@ function AdminUsersContent() {
     onError: (err: any) => toast.error(err.message),
   });
 
+  // Role Badge Renderer
+  const renderRoleBadge = (role: UserItem["role"]) => {
+    switch (role) {
+      case "ADMIN":
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-black bg-green-50 text-green-700 border border-green-200">
+            <Shield className="w-3 h-3 text-green-600" />
+            ADMIN
+          </span>
+        );
+      case "PROVIDER":
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-black bg-blue-50 text-blue-700 border border-blue-200">
+            <Ambulance className="w-3 h-3 text-blue-600" />
+            PROVIDER
+          </span>
+        );
+      case "CUSTOMER":
+      default:
+        return (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-black bg-rose-100 text-rose-700 border border-rose-200">
+            <User className="w-3 h-3 text-rose-500" />
+            CUSTOMER
+          </span>
+        );
+    }
+  };
+
   // Search filtering
   const filteredUsers = users.filter((u) => {
-    const matchesSearch =
-      u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (u.phone && u.phone.includes(searchTerm));
-    return matchesSearch;
+    const term = searchTerm.toLowerCase();
+    return (
+      u.name.toLowerCase().includes(term) ||
+      u.email.toLowerCase().includes(term) ||
+      (u.phone && u.phone.includes(term))
+    );
   });
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto px-4 sm:px-6 py-6 font-sans">
+    <div className="space-y-6 max-w-7xl mx-auto px-4 sm:px-6 py-6 font-sans">
       {/* 1. Header Navigation Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
         <div>
@@ -296,20 +300,9 @@ function AdminUsersContent() {
                         </div>
                       </td>
 
-                      {/* Role Selector */}
+                      {/* Role Static Badge (No Dropdown) */}
                       <td className="py-3.5 px-4">
-                        <select
-                          value={u.role}
-                          disabled={isUpdatingRole}
-                          onChange={(e) =>
-                            updateRole({ userId: u.id, newRole: e.target.value })
-                          }
-                          className="px-2.5 py-1 rounded-lg border border-slate-200 bg-white text-slate-800 font-bold text-[11px] focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 cursor-pointer transition"
-                        >
-                          <option value="CUSTOMER">CUSTOMER</option>
-                          <option value="PROVIDER">PROVIDER</option>
-                          <option value="ADMIN">ADMIN</option>
-                        </select>
+                        {renderRoleBadge(u.role)}
                       </td>
 
                       {/* Verification Status */}
