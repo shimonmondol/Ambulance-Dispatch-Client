@@ -10,6 +10,7 @@ interface AuthState {
   login: (data: { token: string; role: string; name: string; email: string }) => void;
   logout: () => void;
   syncFromCookies: () => void;
+  updateProfile: (data: { name?: string; email?: string }) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -47,6 +48,26 @@ export const useAuthStore = create<AuthState>((set) => ({
       name: null,
       email: null,
       isAuthenticated: false,
+    });
+  },
+
+  updateProfile: (data) => {
+    set((state) => {
+      const updatedName = data.name !== undefined ? data.name : state.name;
+      const updatedEmail = data.email !== undefined ? data.email : state.email;
+
+      if (updatedName) {
+        Cookies.set("user_name", updatedName, { expires: 7 });
+      }
+      if (updatedEmail) {
+        Cookies.set("user_email", updatedEmail, { expires: 7 });
+      }
+
+      return {
+        ...state,
+        name: updatedName,
+        email: updatedEmail,
+      };
     });
   },
 

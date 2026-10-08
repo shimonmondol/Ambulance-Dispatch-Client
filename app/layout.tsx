@@ -19,11 +19,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} min-h-screen bg-white text-slate-800 antialiased`}>
+      <body
+        className={`${inter.className} min-h-screen bg-white text-slate-800 antialiased`}
+      >
         <QueryProvider>
           <Navbar />
           {children}
-          <Toaster position="top-right" richColors />
+          <Toaster position="top-center" richColors closeButton />
         </QueryProvider>
       </body>
     </html>
