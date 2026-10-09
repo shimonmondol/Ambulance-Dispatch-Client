@@ -144,7 +144,7 @@ function AdminDashboardContent() {
     <div className="space-y-8 max-w-6xl mx-auto px-4 sm:px-6 py-6 font-sans">
       {/* 1. Admin Overview Banner */}
       <div className="relative overflow-hidden rounded-3xl bg-emerald-800 p-6 sm:p-8 border border-white/10 shadow-xl">
-        <div className="relative z-10 max-w-xl space-y-3">
+        <div className="relative max-w-6xl space-y-3">
           <h2 className="text-2xl sm:text-3xl font-black capitalize text-white tracking-tight">
           {displayName}
           </h2>
@@ -174,6 +174,20 @@ function AdminDashboardContent() {
             >
               <Users className="w-4 h-4 text-emerald-600" />
               Ambulance List
+            </Link>
+            <Link
+              href="/admin/payments"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-slate-900 font-bold text-xs shadow-md transition hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <Users className="w-4 h-4 text-emerald-600" />
+              Payment
+            </Link>
+            <Link
+              href="/admin/audit-logs"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-slate-900 font-bold text-xs shadow-md transition hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <Users className="w-4 h-4 text-emerald-600" />
+              Audit-log
             </Link>
           </div>
         </div>
