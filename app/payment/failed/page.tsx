@@ -10,7 +10,6 @@ import {
   Ambulance,
   Hash,
   AlertTriangle,
-  Clock,
   Loader2,
   MapPin,
   CreditCard,
@@ -34,14 +33,11 @@ function PaymentFailedContent() {
 
   const [rideDetails, setRideDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [retrying, setRetrying] = useState(false);
+  const [retryError, setRetryError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!rideId) {
-      router.push("/customer/dashboard");
-      return;
-    }
-
-    // ১. স্টোর অথবা লোকাল স্টোরেজ থেকে নিরাপদ টোকেন রিকভারি
+  // নিরাপদ টোকেন পাওয়ার হেল্পার
+  const getEffectiveToken = () => {
     let effectiveToken = token;
     if (!effectiveToken && typeof window !== "undefined") {
       try {
@@ -51,6 +47,16 @@ function PaymentFailedContent() {
         }
       } catch {}
     }
+    return effectiveToken;
+  };
+
+  useEffect(() => {
+    if (!rideId) {
+      router.push("/customer/dashboard");
+      return;
+    }
+
+    const effectiveToken = getEffectiveToken();
 
     const fetchRide = async () => {
       try {
@@ -68,7 +74,7 @@ function PaymentFailedContent() {
           setRideDetails(json.data);
         }
       } catch {
-        // ব্যাকএন্ড কল ফেইল করলেও পেজ ক্র্যাশ করবে না
+        // ব্যাকএন্ড কল ড্রপ করলেও পেজ ক্র্যাশ করবে না
       } finally {
         setLoading(false);
       }
@@ -77,7 +83,37 @@ function PaymentFailedContent() {
     fetchRide();
   }, [rideId, token]);
 
-  // ফেইল হওয়ার কারণ অনুযায়ী বার্তা
+  // সরাসরি SSLCommerz গেটওয়েতে রিডাইরেক্ট করার ফাংশন
+  const handleRetryPayment = async () => {
+    try {
+      setRetrying(true);
+      setRetryError(null);
+      const effectiveToken = getEffectiveToken();
+
+      const res = await fetch(`${API_BASE}/payment/ssl-init`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(effectiveToken ? { Authorization: `Bearer ${effectiveToken}` } : {}),
+        },
+        body: JSON.stringify({ rideId }),
+      });
+
+      const data = await res.json();
+
+      if (data.success && data.data?.GatewayPageURL) {
+        // সরাসরি SSLCommerz পেমেন্ট স্ক্রিনে পাঠিয়ে দেওয়া হচ্ছে
+        window.location.href = data.data.GatewayPageURL;
+      } else {
+        setRetryError(data.message || "Failed to initialize payment gateway. Please try again.");
+      }
+    } catch {
+      setRetryError("Network error. Please check your connection and retry.");
+    } finally {
+      setRetrying(false);
+    }
+  };
+
   const getFailureReason = () => {
     switch (reason) {
       case "user_cancelled":
@@ -157,7 +193,7 @@ function PaymentFailedContent() {
               <span className="text-slate-500 flex items-center gap-1 shrink-0">
                 <MapPin className="w-3.5 h-3.5 text-rose-500" /> Route
               </span>
-              <span className="font-semibold text-slate-800 text-right">
+              <span className="font-semibold text-slate-800 text-right truncate">
                 {rideDetails.pickupAddress} → {rideDetails.destination}
               </span>
             </div>
@@ -175,18 +211,34 @@ function PaymentFailedContent() {
         <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200/70 text-amber-900 text-[11px] flex items-start gap-2.5 text-left">
           <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <span>
-            No funds have been permanently deducted from your account. You can retry safely with bKash, Nagad, or another card.
+            No funds have been permanently deducted from your account. You can retry safely with bKash, Nagad, or card.
           </span>
         </div>
 
-        {/* Navigation Action Buttons */}
+        {retryError && (
+          <p className="text-xs text-rose-600 font-semibold bg-rose-50 p-2.5 rounded-xl border border-rose-100">
+            {retryError}
+          </p>
+        )}
+
+        {/* Action Buttons */}
         <div className="pt-2 flex flex-col sm:flex-row gap-3">
-          <Link
-            href={`/booking?retryRideId=${rideId}`}
-            className="flex-1 py-3.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-rose-200 active:scale-95 cursor-pointer"
+          <button
+            onClick={handleRetryPayment}
+            disabled={retrying}
+            type="button"
+            className="flex-1 py-3.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-rose-200 active:scale-95 disabled:opacity-50 cursor-pointer"
           >
-            <RotateCcw className="w-4 h-4" /> Try Again
-          </Link>
+            {retrying ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" /> Redirecting to Gateway...
+              </>
+            ) : (
+              <>
+                <RotateCcw className="w-4 h-4" /> Try Again
+              </>
+            )}
+          </button>
           <Link
             href="/customer/dashboard"
             className="py-3.5 px-5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
