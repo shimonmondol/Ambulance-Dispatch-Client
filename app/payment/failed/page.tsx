@@ -33,11 +33,13 @@ function PaymentFailedContent() {
 
   const [rideDetails, setRideDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [retrying, setRetrying] = useState(false);
-  const [retryError, setRetryError] = useState<string | null>(null);
 
-  // নিরাপদ টোকেন পাওয়ার হেল্পার
-  const getEffectiveToken = () => {
+  useEffect(() => {
+    if (!rideId) {
+      router.push("/customer/dashboard");
+      return;
+    }
+
     let effectiveToken = token;
     if (!effectiveToken && typeof window !== "undefined") {
       try {
@@ -47,16 +49,6 @@ function PaymentFailedContent() {
         }
       } catch {}
     }
-    return effectiveToken;
-  };
-
-  useEffect(() => {
-    if (!rideId) {
-      router.push("/customer/dashboard");
-      return;
-    }
-
-    const effectiveToken = getEffectiveToken();
 
     const fetchRide = async () => {
       try {
@@ -82,37 +74,6 @@ function PaymentFailedContent() {
 
     fetchRide();
   }, [rideId, token]);
-
-  // সরাসরি SSLCommerz গেটওয়েতে রিডাইরেক্ট করার ফাংশন
-  const handleRetryPayment = async () => {
-    try {
-      setRetrying(true);
-      setRetryError(null);
-      const effectiveToken = getEffectiveToken();
-
-      const res = await fetch(`${API_BASE}/payment/ssl-init`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(effectiveToken ? { Authorization: `Bearer ${effectiveToken}` } : {}),
-        },
-        body: JSON.stringify({ rideId }),
-      });
-
-      const data = await res.json();
-
-      if (data.success && data.data?.GatewayPageURL) {
-        // সরাসরি SSLCommerz পেমেন্ট স্ক্রিনে পাঠিয়ে দেওয়া হচ্ছে
-        window.location.href = data.data.GatewayPageURL;
-      } else {
-        setRetryError(data.message || "Failed to initialize payment gateway. Please try again.");
-      }
-    } catch {
-      setRetryError("Network error. Please check your connection and retry.");
-    } finally {
-      setRetrying(false);
-    }
-  };
 
   const getFailureReason = () => {
     switch (reason) {
@@ -211,34 +172,19 @@ function PaymentFailedContent() {
         <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200/70 text-amber-900 text-[11px] flex items-start gap-2.5 text-left">
           <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <span>
-            No funds have been permanently deducted from your account. You can retry safely with bKash, Nagad, or card.
+            No funds have been permanently deducted from your account. You can retry safely with bKash, Nagad, or another method.
           </span>
         </div>
 
-        {retryError && (
-          <p className="text-xs text-rose-600 font-semibold bg-rose-50 p-2.5 rounded-xl border border-rose-100">
-            {retryError}
-          </p>
-        )}
-
-        {/* Action Buttons */}
+        {/* Navigation Action Buttons */}
         <div className="pt-2 flex flex-col sm:flex-row gap-3">
-          <button
-            onClick={handleRetryPayment}
-            disabled={retrying}
-            type="button"
-            className="flex-1 py-3.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-rose-200 active:scale-95 disabled:opacity-50 cursor-pointer"
+          {/* Try Again এ ক্লিক করলে সরাসরি /payment পেজে rideId ও amount নিয়ে যাবে */}
+          <Link
+            href={`/payment?rideId=${rideId}&amount=${payableAmount}`}
+            className="flex-1 py-3.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-rose-200 active:scale-95 cursor-pointer"
           >
-            {retrying ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" /> Redirecting to Gateway...
-              </>
-            ) : (
-              <>
-                <RotateCcw className="w-4 h-4" /> Try Again
-              </>
-            )}
-          </button>
+            <RotateCcw className="w-4 h-4" /> Try Again
+          </Link>
           <Link
             href="/customer/dashboard"
             className="py-3.5 px-5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
