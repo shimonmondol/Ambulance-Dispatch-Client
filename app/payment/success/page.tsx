@@ -7,12 +7,12 @@ import {
   CheckCircle2,
   ArrowRight,
   Ambulance,
-  Calendar,
   Hash,
   Download,
   ShieldCheck,
   Clock,
   Loader2,
+  MapPin,
 } from "lucide-react";
 import { useAuthStore } from "@/lib/useAuthStore";
 import Footer from "@/components/Footer";
@@ -25,7 +25,7 @@ const API_BASE =
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { token, isAuthenticated } = useAuthStore();
+  const { token } = useAuthStore();
 
   const rideId = searchParams.get("rideId") || "";
   const tranId = searchParams.get("tran_id") || "";
@@ -34,43 +34,46 @@ function PaymentSuccessContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let storedToken: string | null = null;
-    try {
-      const rawStore = localStorage.getItem("auth-storage");
-      if (rawStore) {
-        storedToken = JSON.parse(rawStore)?.state?.token || null;
-      }
-    } catch {}
-
-    const effectiveToken = token || storedToken;
-
     if (!rideId) {
       router.push("/customer/dashboard");
       return;
     }
 
+    // ১. স্টোর অথবা লোকাল স্টোরেজ থেকে টোকেন নিশ্চিত করা
+    let effectiveToken = token;
+    if (!effectiveToken && typeof window !== "undefined") {
+      try {
+        const rawStore = localStorage.getItem("auth-storage");
+        if (rawStore) {
+          effectiveToken = JSON.parse(rawStore)?.state?.token || null;
+        }
+      } catch {}
+    }
+
     const fetchRide = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_BASE}/rides/${rideId}`, {
-          headers: {
-            Authorization: `Bearer ${effectiveToken}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
+        if (effectiveToken) {
+          headers["Authorization"] = `Bearer ${effectiveToken}`;
+        }
+
+        const res = await fetch(`${API_BASE}/rides/${rideId}`, { headers });
         if (res.ok) {
           const json = await res.json();
           setRideDetails(json.data);
         }
       } catch {
-        // Fallback
+        // ফেচ ফেইল করলেও URL প্যারামস দিয়ে পেজ টিকে থাকবে
       } finally {
         setLoading(false);
       }
     };
 
     fetchRide();
-  }, [rideId, token, router]);
+  }, [rideId, token]);
 
   if (loading) {
     return (
@@ -84,9 +87,9 @@ function PaymentSuccessContent() {
   return (
     <div className="max-w-xl mx-auto py-8 px-4 font-sans space-y-6">
       {/* Success Card */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6 text-center">
+      <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-xs space-y-6 text-center">
         {/* Animated Green Badge */}
-        <div className="w-20 h-20 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-sm animate-in zoom-in-50 duration-300">
+        <div className="w-20 h-20 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-xs animate-in zoom-in-50 duration-300">
           <CheckCircle2 className="w-10 h-10" />
         </div>
 
@@ -98,8 +101,7 @@ function PaymentSuccessContent() {
             Payment Successful!
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            Thank you! Your emergency ambulance transit payment has been
-            verified via SSLCommerz.
+            Thank you! Your emergency ambulance transit payment has been verified via SSLCommerz.
           </p>
         </div>
 
@@ -116,8 +118,7 @@ function PaymentSuccessContent() {
 
           <div className="flex items-center justify-between pb-3 border-b border-slate-200/60">
             <span className="text-slate-500 flex items-center gap-1.5">
-              <Ambulance className="w-3.5 h-3.5 text-slate-400" /> Dispatch
-              Ticket
+              <Ambulance className="w-3.5 h-3.5 text-slate-400" /> Dispatch Ticket
             </span>
             <span className="font-mono font-bold text-slate-800">
               #{rideId.slice(-6).toUpperCase()}
@@ -134,20 +135,20 @@ function PaymentSuccessContent() {
           </div>
 
           {rideDetails && (
-            <>
-              <div className="flex items-start justify-between pb-3 border-b border-slate-200/60 gap-4">
-                <span className="text-slate-500">Route</span>
-                <span className="font-semibold text-slate-800 text-right">
-                  {rideDetails.pickupAddress} → {rideDetails.destination}
-                </span>
-              </div>
-            </>
+            <div className="flex items-start justify-between pb-3 border-b border-slate-200/60 gap-4">
+              <span className="text-slate-500 flex items-center gap-1 shrink-0">
+                <MapPin className="w-3.5 h-3.5 text-rose-500" /> Route
+              </span>
+              <span className="font-semibold text-slate-800 text-right">
+                {rideDetails.pickupAddress} → {rideDetails.destination}
+              </span>
+            </div>
           )}
 
           <div className="flex items-center justify-between pt-1">
             <span className="font-bold text-slate-700">Total Paid</span>
             <span className="text-base font-black text-emerald-600">
-              ৳{rideDetails?.fareAmount || 1500} BDT
+              ৳{rideDetails?.fareAmount?.toLocaleString() || "1,500"} BDT
             </span>
           </div>
         </div>
@@ -158,8 +159,8 @@ function PaymentSuccessContent() {
           <span>Verified & encrypted digital medical receipt</span>
         </div>
 
-        {/* Navigation Action Buttons */}
-        <div className="pt-2 flex flex-col sm:flex-row gap-3">
+        {/* Navigation Action Buttons (প্রিন্টের সময় লুকানো থাকবে) */}
+        <div className="pt-2 flex flex-col sm:flex-row gap-3 print:hidden">
           <Link
             href="/customer/dashboard"
             className="flex-1 py-3.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 shadow-md shadow-rose-200 active:scale-95"
@@ -168,6 +169,7 @@ function PaymentSuccessContent() {
           </Link>
           <button
             onClick={() => window.print()}
+            type="button"
             className="py-3.5 px-5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
           >
             <Download className="w-4 h-4" /> Print Receipt
@@ -192,7 +194,9 @@ export default function PaymentSuccessPage() {
           <PaymentSuccessContent />
         </Suspense>
       </main>
-      <Footer />
+      <div className="print:hidden">
+        <Footer />
+      </div>
     </div>
   );
 }
