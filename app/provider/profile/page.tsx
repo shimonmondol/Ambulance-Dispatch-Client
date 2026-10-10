@@ -23,7 +23,7 @@ import Footer from "@/components/Footer";
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:5000";
+  "https://ambulance-dispatch-mu.vercel.app";
 
 // Strict validation schema matching exactly what is rendered in the form
 const providerProfileSchema = z.object({
@@ -42,7 +42,11 @@ const providerProfileSchema = z.object({
 type ProviderProfileFormData = z.infer<typeof providerProfileSchema>;
 
 function ProviderProfileContent() {
-  const { token, isAuthenticated, updateProfile: updateAuthStoreProfile } = useAuthStore();
+  const {
+    token,
+    isAuthenticated,
+    updateProfile: updateAuthStoreProfile,
+  } = useAuthStore();
   const queryClient = useQueryClient();
 
   const {
@@ -175,7 +179,8 @@ function ProviderProfileContent() {
             </h1>
           </div>
           <p className="text-xs text-slate-500">
-            Manage your personal credentials, transit license, and contact details.
+            Manage your personal credentials, transit license, and contact
+            details.
           </p>
         </div>
 

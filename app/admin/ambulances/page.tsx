@@ -85,7 +85,7 @@ const FLEET_DEFINITIONS: Record<
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:5000";
+  "https://ambulance-dispatch-mu.vercel.app";
 
 const normalizeCategory = (rawType: string = ""): AmbulanceCategory => {
   const t = rawType.toUpperCase().trim();

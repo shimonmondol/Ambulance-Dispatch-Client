@@ -19,7 +19,7 @@ import {
   HeartPulse,
   Navigation,
   CheckCircle2,
-  Info
+  Info,
 } from "lucide-react";
 import { useAuthStore } from "@/lib/useAuthStore";
 import { toast } from "sonner";
@@ -69,21 +69,21 @@ export default function AmbulanceBookingPage() {
           "Built-in Ventilator & Oxygen Monitor",
           "Cardiac Defibrillator & ECG",
           "Specialized Critical Care Paramedic",
-          "Emergency Infusion Pump"
+          "Emergency Infusion Pump",
         ];
       case "ADVANCED_LIFE_SUPPORT":
         return [
           "Continuous Oxygen Support",
           "IV Fluid Administration Kit",
           "Trained Emergency Paramedic",
-          "Multi-parameter Patient Monitor"
+          "Multi-parameter Patient Monitor",
         ];
       default:
         return [
           "Standard Medical Oxygen Cylinder",
           "First Aid & Trauma Stabilization",
           "Hydraulic Stretcher Bed",
-          "Rapid Urban Transit Clearance"
+          "Rapid Urban Transit Clearance",
         ];
     }
   };
@@ -95,7 +95,7 @@ export default function AmbulanceBookingPage() {
         const baseUrl =
           process.env.NEXT_PUBLIC_API_URL ||
           process.env.NEXT_PUBLIC_BACKEND_URL ||
-          "http://localhost:5000";
+          "https://ambulance-dispatch-mu.vercel.app";
 
         const res = await fetch(`${baseUrl}/ambulances/${id}`);
         if (res.ok) {
@@ -140,7 +140,7 @@ export default function AmbulanceBookingPage() {
       const baseUrl =
         process.env.NEXT_PUBLIC_API_URL ||
         process.env.NEXT_PUBLIC_BACKEND_URL ||
-        "http://localhost:5000";
+        "https://ambulance-dispatch-mu.vercel.app";
 
       const payload = {
         ambulanceId: ambulance?.id || id,
@@ -163,11 +163,13 @@ export default function AmbulanceBookingPage() {
 
       if (!res.ok || result.success === false) {
         throw new Error(
-          result.message || "Failed to submit emergency dispatch request"
+          result.message || "Failed to submit emergency dispatch request",
         );
       }
 
-      toast.success("Emergency ride request created successfully! Redirecting...");
+      toast.success(
+        "Emergency ride request created successfully! Redirecting...",
+      );
       router.push("/customer/dashboard");
     } catch (err: any) {
       toast.error(err.message || "Could not complete ride request");
@@ -188,7 +190,9 @@ export default function AmbulanceBookingPage() {
             <p className="text-sm font-semibold text-slate-700">
               Connecting with live fleet registry...
             </p>
-            <p className="text-xs text-slate-400 mt-1">Checking vehicle operational status</p>
+            <p className="text-xs text-slate-400 mt-1">
+              Checking vehicle operational status
+            </p>
           </div>
         ) : error || !ambulance ? (
           <div className="min-h-[55vh] flex flex-col items-center justify-center text-center max-w-md mx-auto">
@@ -199,7 +203,8 @@ export default function AmbulanceBookingPage() {
               Vehicle Unavailable
             </h2>
             <p className="text-sm text-slate-500 mt-2 mb-6">
-              {error || "We couldn't retrieve information for this specific ambulance."}
+              {error ||
+                "We couldn't retrieve information for this specific ambulance."}
             </p>
             <Link
               href="/services"
@@ -230,11 +235,9 @@ export default function AmbulanceBookingPage() {
 
             {/* Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
               {/* LEFT COLUMN: Vehicle Details */}
               <div className="lg:col-span-7 space-y-6">
                 <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
-                  
                   {/* Clean Vehicle Image (No Text/Badges Overlay) */}
                   <div className="relative h-72 sm:h-96 w-full bg-slate-900 overflow-hidden">
                     <img
@@ -252,13 +255,16 @@ export default function AmbulanceBookingPage() {
                           {ambulance.type.replace(/_/g, " ")}
                         </span>
                         <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2.5 py-1 rounded-full flex items-center gap-1">
-                          <Activity className="w-3 h-3 text-emerald-500" /> Operational
+                          <Activity className="w-3 h-3 text-emerald-500" />{" "}
+                          Operational
                         </span>
                       </div>
                       <div className="flex items-center gap-1.5 text-xs text-slate-500 font-mono bg-slate-100 px-3 py-1 rounded-lg">
                         <Hash className="w-3.5 h-3.5 text-rose-500" />
                         <span>Registration:</span>
-                        <strong className="text-slate-800">{ambulance.registrationNo}</strong>
+                        <strong className="text-slate-800">
+                          {ambulance.registrationNo}
+                        </strong>
                       </div>
                     </div>
 
@@ -274,21 +280,27 @@ export default function AmbulanceBookingPage() {
                       <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">
                         Response Time
                       </span>
-                      <span className="text-xs sm:text-sm font-bold text-slate-800">8 - 15 Mins</span>
+                      <span className="text-xs sm:text-sm font-bold text-slate-800">
+                        8 - 15 Mins
+                      </span>
                     </div>
                     <div className="px-2">
                       <ShieldCheck className="w-4 h-4 text-emerald-600 mx-auto mb-1.5" />
                       <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">
                         Paramedic Support
                       </span>
-                      <span className="text-xs sm:text-sm font-bold text-slate-800">Certified</span>
+                      <span className="text-xs sm:text-sm font-bold text-slate-800">
+                        Certified
+                      </span>
                     </div>
                     <div className="px-2">
                       <Zap className="w-4 h-4 text-amber-500 mx-auto mb-1.5" />
                       <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">
                         Transit Route
                       </span>
-                      <span className="text-xs sm:text-sm font-bold text-slate-800">Priority ETA</span>
+                      <span className="text-xs sm:text-sm font-bold text-slate-800">
+                        Priority ETA
+                      </span>
                     </div>
                   </div>
                   {/* Pricing Footer */}
@@ -297,7 +309,9 @@ export default function AmbulanceBookingPage() {
                       <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
                         Standard Pricing
                       </span>
-                      <span className="text-xs text-slate-300">Base Dispatch + Per Km Rate</span>
+                      <span className="text-xs text-slate-300">
+                        Base Dispatch + Per Km Rate
+                      </span>
                     </div>
                     <div className="text-right">
                       <span className="text-2xl font-black tracking-tight text-white">
@@ -322,7 +336,8 @@ export default function AmbulanceBookingPage() {
                       Confirm Dispatch Details
                     </h2>
                     <p className="text-xs text-slate-500 mt-1">
-                      Enter the patient&apos;s current address and target destination to trigger assignment.
+                      Enter the patient&apos;s current address and target
+                      destination to trigger assignment.
                     </p>
                   </div>
                   <form onSubmit={handleConfirmRide} className="space-y-4">
@@ -375,7 +390,10 @@ export default function AmbulanceBookingPage() {
                     <div className="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/60 flex items-start gap-2.5 text-amber-900 text-xs">
                       <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                       <p className="leading-relaxed text-[11px]">
-                        The ride request will be initialized as <strong>PENDING</strong> on your customer dashboard. You can review <strong>PAY NOW</strong> or <strong>CANCEL</strong>  anytime prior to dispatch.
+                        The ride request will be initialized as{" "}
+                        <strong>PENDING</strong> on your customer dashboard. You
+                        can review <strong>PAY NOW</strong> or{" "}
+                        <strong>CANCEL</strong> anytime prior to dispatch.
                       </p>
                     </div>
                     {/* Submit Button */}

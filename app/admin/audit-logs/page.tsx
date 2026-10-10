@@ -37,7 +37,7 @@ interface AuditLogItem {
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:5000";
+  "https://ambulance-dispatch-mu.vercel.app";
 
 function AdminAuditLogsContent() {
   const { token, isAuthenticated } = useAuthStore();
@@ -76,8 +76,7 @@ function AdminAuditLogsContent() {
   // Search & Filter Logic
   const filteredLogs = useMemo(() => {
     return logs.filter((log) => {
-      const matchesRole =
-        roleFilter === "ALL" || log.user?.role === roleFilter;
+      const matchesRole = roleFilter === "ALL" || log.user?.role === roleFilter;
 
       const term = searchQuery.trim().toLowerCase();
       const action = (log.action || "").toLowerCase();
@@ -99,7 +98,11 @@ function AdminAuditLogsContent() {
   // Action Badge Helper
   const renderActionBadge = (action: string) => {
     const act = action.toUpperCase();
-    if (act.includes("DELETE") || act.includes("BAN") || act.includes("CANCEL")) {
+    if (
+      act.includes("DELETE") ||
+      act.includes("BAN") ||
+      act.includes("CANCEL")
+    ) {
       return (
         <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-50 text-rose-700 border border-rose-200">
           <AlertTriangle className="w-3 h-3 text-rose-600" />
@@ -107,7 +110,11 @@ function AdminAuditLogsContent() {
         </span>
       );
     }
-    if (act.includes("CREATE") || act.includes("ADD") || act.includes("VERIFY")) {
+    if (
+      act.includes("CREATE") ||
+      act.includes("ADD") ||
+      act.includes("VERIFY")
+    ) {
       return (
         <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-50 text-emerald-700 border border-emerald-200">
           <CheckCircle2 className="w-3 h-3 text-emerald-600" />
@@ -143,7 +150,8 @@ function AdminAuditLogsContent() {
             System Audit Trail & Access Logs
           </h1>
           <p className="text-xs text-slate-500">
-            Monitor administrative events, sensitive changes, and system activities.
+            Monitor administrative events, sensitive changes, and system
+            activities.
           </p>
         </div>
 
@@ -198,13 +206,19 @@ function AdminAuditLogsContent() {
         ) : isError ? (
           <div className="py-16 text-center space-y-2">
             <AlertCircle className="w-8 h-8 text-rose-500 mx-auto" />
-            <p className="text-sm font-bold text-slate-800">Failed to load audit logs</p>
-            <p className="text-xs text-slate-400">{(error as Error)?.message}</p>
+            <p className="text-sm font-bold text-slate-800">
+              Failed to load audit logs
+            </p>
+            <p className="text-xs text-slate-400">
+              {(error as Error)?.message}
+            </p>
           </div>
         ) : filteredLogs.length === 0 ? (
           <div className="py-16 text-center space-y-2">
             <ShieldAlert className="w-8 h-8 text-slate-300 mx-auto" />
-            <p className="text-sm font-bold text-slate-800">No audit records found</p>
+            <p className="text-sm font-bold text-slate-800">
+              No audit records found
+            </p>
             <p className="text-xs text-slate-400">
               Try adjusting your search criteria or role filters.
             </p>
@@ -236,7 +250,9 @@ function AdminAuditLogsContent() {
                     </td>
 
                     {/* Action */}
-                    <td className="py-3.5 px-4">{renderActionBadge(log.action)}</td>
+                    <td className="py-3.5 px-4">
+                      {renderActionBadge(log.action)}
+                    </td>
 
                     {/* User */}
                     <td className="py-3.5 px-4">
@@ -254,7 +270,9 @@ function AdminAuditLogsContent() {
                           </div>
                         </div>
                       ) : (
-                        <span className="text-slate-400 italic">System Automation</span>
+                        <span className="text-slate-400 italic">
+                          System Automation
+                        </span>
                       )}
                     </td>
 

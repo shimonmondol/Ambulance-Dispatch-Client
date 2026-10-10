@@ -3,21 +3,24 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { 
-  CheckCircle2, 
-  ArrowRight, 
-  Ambulance, 
-  Calendar, 
-  Hash, 
-  Download, 
-  ShieldCheck, 
-  Clock, 
-  Loader2 
+import {
+  CheckCircle2,
+  ArrowRight,
+  Ambulance,
+  Calendar,
+  Hash,
+  Download,
+  ShieldCheck,
+  Clock,
+  Loader2,
 } from "lucide-react";
 import { useAuthStore } from "@/lib/useAuthStore";
 import Footer from "@/components/Footer";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ||
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  "https://ambulance-dispatch-mu.vercel.app";
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
@@ -80,10 +83,8 @@ function PaymentSuccessContent() {
 
   return (
     <div className="max-w-xl mx-auto py-8 px-4 font-sans space-y-6">
-      
       {/* Success Card */}
       <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6 text-center">
-        
         {/* Animated Green Badge */}
         <div className="w-20 h-20 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-sm animate-in zoom-in-50 duration-300">
           <CheckCircle2 className="w-10 h-10" />
@@ -97,13 +98,13 @@ function PaymentSuccessContent() {
             Payment Successful!
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            Thank you! Your emergency ambulance transit payment has been verified via SSLCommerz.
+            Thank you! Your emergency ambulance transit payment has been
+            verified via SSLCommerz.
           </p>
         </div>
 
         {/* Receipt Box */}
         <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-4 text-xs space-y-3 text-left">
-          
           <div className="flex items-center justify-between pb-3 border-b border-slate-200/60">
             <span className="text-slate-500 flex items-center gap-1.5">
               <Hash className="w-3.5 h-3.5 text-slate-400" /> Transaction ID
@@ -115,7 +116,8 @@ function PaymentSuccessContent() {
 
           <div className="flex items-center justify-between pb-3 border-b border-slate-200/60">
             <span className="text-slate-500 flex items-center gap-1.5">
-              <Ambulance className="w-3.5 h-3.5 text-slate-400" /> Dispatch Ticket
+              <Ambulance className="w-3.5 h-3.5 text-slate-400" /> Dispatch
+              Ticket
             </span>
             <span className="font-mono font-bold text-slate-800">
               #{rideId.slice(-6).toUpperCase()}
@@ -180,7 +182,13 @@ export default function PaymentSuccessPage() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 font-sans antialiased">
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <Suspense fallback={<div className="py-20 text-center text-xs text-slate-400">Loading receipt...</div>}>
+        <Suspense
+          fallback={
+            <div className="py-20 text-center text-xs text-slate-400">
+              Loading receipt...
+            </div>
+          }
+        >
           <PaymentSuccessContent />
         </Suspense>
       </main>

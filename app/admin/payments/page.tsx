@@ -24,7 +24,6 @@ import { toast } from "sonner";
 import { useAuthStore } from "@/lib/useAuthStore";
 import Footer from "@/components/Footer";
 
-
 // Interfaces & Types
 type PaymentStatusType = "PAID" | "UNPAID" | "FAILED";
 
@@ -62,8 +61,7 @@ interface PaymentLedgerResponse {
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:5000";
-
+  "https://ambulance-dispatch-mu.vercel.app";
 
 // Main Content Component
 function AdminPaymentsContent() {
@@ -75,37 +73,34 @@ function AdminPaymentsContent() {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   // 1. Fetch Payments Ledger & Financial Analytics
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useQuery<PaymentLedgerResponse>({
-    queryKey: ["adminPayments", token, statusFilter],
-    queryFn: async () => {
-      const url =
-        statusFilter === "ALL"
-          ? `${API_BASE}/admin/payments`
-          : `${API_BASE}/admin/payments?status=${statusFilter}`;
+  const { data, isLoading, isError, error, refetch } =
+    useQuery<PaymentLedgerResponse>({
+      queryKey: ["adminPayments", token, statusFilter],
+      queryFn: async () => {
+        const url =
+          statusFilter === "ALL"
+            ? `${API_BASE}/admin/payments`
+            : `${API_BASE}/admin/payments?status=${statusFilter}`;
 
-      const res = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+        const res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
-      if (!res.ok) {
-        const errJson = await res.json().catch(() => ({}));
-        throw new Error(errJson.message || "Failed to load payment transactions");
-      }
+        if (!res.ok) {
+          const errJson = await res.json().catch(() => ({}));
+          throw new Error(
+            errJson.message || "Failed to load payment transactions",
+          );
+        }
 
-      const json = await res.json();
-      return json.data;
-    },
-    enabled: Boolean(token && isAuthenticated),
-  });
+        const json = await res.json();
+        return json.data;
+      },
+      enabled: Boolean(token && isAuthenticated),
+    });
 
   const payments = data?.payments || [];
   const summary = data?.summary || {
@@ -117,7 +112,13 @@ function AdminPaymentsContent() {
 
   // 2. Mutation: Update Transaction Settlement Status
   const { mutate: updateStatus } = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: PaymentStatusType }) => {
+    mutationFn: async ({
+      id,
+      status,
+    }: {
+      id: string;
+      status: PaymentStatusType;
+    }) => {
       setUpdatingId(id);
       const res = await fetch(`${API_BASE}/admin/payments/${id}/status`, {
         method: "PATCH",
@@ -151,7 +152,9 @@ function AdminPaymentsContent() {
       if (!term) return true;
 
       const txId = (item.transactionId || "").toLowerCase();
-      const customerName = (item.rideRequest?.customer?.name || "").toLowerCase();
+      const customerName = (
+        item.rideRequest?.customer?.name || ""
+      ).toLowerCase();
       const phone = item.rideRequest?.customer?.phone || "";
       const missionId = (item.rideRequest?.id || "").toLowerCase();
       const pickup = (item.rideRequest?.pickupAddress || "").toLowerCase();
@@ -218,7 +221,8 @@ function AdminPaymentsContent() {
             Payment & Revenue Ledger
           </h1>
           <p className="text-xs text-slate-500">
-            Audit emergency trip fare settlements, transaction gateways, and cash disbursements.
+            Audit emergency trip fare settlements, transaction gateways, and
+            cash disbursements.
           </p>
         </div>
 
@@ -241,7 +245,9 @@ function AdminPaymentsContent() {
             <DollarSign className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-medium">Collected Revenue</p>
+            <p className="text-xs text-slate-500 font-medium">
+              Collected Revenue
+            </p>
             <h3 className="text-2xl font-black text-slate-900">
               ৳{summary.totalPaid.toLocaleString()}
             </h3>
@@ -254,7 +260,9 @@ function AdminPaymentsContent() {
             <Clock className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-medium">Pending Settlements</p>
+            <p className="text-xs text-slate-500 font-medium">
+              Pending Settlements
+            </p>
             <h3 className="text-2xl font-black text-slate-900">
               ৳{summary.totalPending.toLocaleString()}
             </h3>
@@ -267,7 +275,9 @@ function AdminPaymentsContent() {
             <CreditCard className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-xs text-slate-500 font-medium">Failed / Unsettled</p>
+            <p className="text-xs text-slate-500 font-medium">
+              Failed / Unsettled
+            </p>
             <h3 className="text-2xl font-black text-slate-900">
               ৳{summary.totalFailed.toLocaleString()}
             </h3>
@@ -310,19 +320,29 @@ function AdminPaymentsContent() {
         {isLoading ? (
           <div className="py-24 flex flex-col items-center justify-center text-slate-500">
             <Loader2 className="w-8 h-8 animate-spin text-emerald-600 mb-3" />
-            <p className="text-xs font-semibold">Streaming financial transactions...</p>
+            <p className="text-xs font-semibold">
+              Streaming financial transactions...
+            </p>
           </div>
         ) : isError ? (
           <div className="py-16 text-center space-y-2">
             <AlertCircle className="w-8 h-8 text-rose-500 mx-auto" />
-            <p className="text-sm font-bold text-slate-800">Failed to load transactions</p>
-            <p className="text-xs text-slate-400">{(error as Error)?.message}</p>
+            <p className="text-sm font-bold text-slate-800">
+              Failed to load transactions
+            </p>
+            <p className="text-xs text-slate-400">
+              {(error as Error)?.message}
+            </p>
           </div>
         ) : filteredPayments.length === 0 ? (
           <div className="py-16 text-center space-y-2">
             <CreditCard className="w-8 h-8 text-slate-300 mx-auto" />
-            <p className="text-sm font-bold text-slate-800">No payment records found</p>
-            <p className="text-xs text-slate-400">Try adjusting your filter or search criteria.</p>
+            <p className="text-sm font-bold text-slate-800">
+              No payment records found
+            </p>
+            <p className="text-xs text-slate-400">
+              Try adjusting your filter or search criteria.
+            </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -344,18 +364,23 @@ function AdminPaymentsContent() {
                   const isProcessing = updatingId === payment.id;
 
                   return (
-                    <tr key={payment.id} className="hover:bg-slate-50/60 transition">
+                    <tr
+                      key={payment.id}
+                      className="hover:bg-slate-50/60 transition"
+                    >
                       {/* Transaction ID & Date */}
                       <td className="py-3.5 px-5">
                         <div className="font-mono font-bold text-slate-900">
-                          {payment.transactionId || `TX-${payment.id.slice(-6).toUpperCase()}`}
+                          {payment.transactionId ||
+                            `TX-${payment.id.slice(-6).toUpperCase()}`}
                         </div>
                         <div className="text-[10px] text-slate-400 mt-0.5">
                           {new Date(payment.createdAt).toLocaleString()}
                         </div>
                         {payment.rideRequest?.id && (
                           <div className="text-[10px] text-emerald-700 font-semibold mt-0.5">
-                            Trip: #{payment.rideRequest.id.slice(-6).toUpperCase()}
+                            Trip: #
+                            {payment.rideRequest.id.slice(-6).toUpperCase()}
                           </div>
                         )}
                       </td>
@@ -378,7 +403,9 @@ function AdminPaymentsContent() {
                       <td className="py-3.5 px-4 max-w-xs">
                         <div className="truncate text-slate-700 font-medium flex items-center gap-1">
                           <MapPin className="w-3 h-3 text-rose-500 shrink-0" />
-                          <span className="truncate">{payment.rideRequest?.pickupAddress || "N/A"}</span>
+                          <span className="truncate">
+                            {payment.rideRequest?.pickupAddress || "N/A"}
+                          </span>
                         </div>
                         <div className="truncate text-[11px] text-slate-400 mt-0.5">
                           To: {payment.rideRequest?.destination || "N/A"}
@@ -403,7 +430,9 @@ function AdminPaymentsContent() {
                       </td>
 
                       {/* Status */}
-                      <td className="py-3.5 px-4">{renderStatusBadge(payment.status)}</td>
+                      <td className="py-3.5 px-4">
+                        {renderStatusBadge(payment.status)}
+                      </td>
 
                       {/* Settlement Action Toggle */}
                       <td className="py-3.5 px-5 text-right">

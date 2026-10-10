@@ -61,7 +61,7 @@ interface OverviewData {
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:5000";
+  "https://ambulance-dispatch-mu.vercel.app";
 
 function AdminDashboardContent() {
   const router = useRouter();
@@ -82,7 +82,7 @@ function AdminDashboardContent() {
         router.replace(
           role.toUpperCase() === "PROVIDER"
             ? "/provider/dashboard"
-            : "/customer/dashboard"
+            : "/customer/dashboard",
         );
       }
     }
@@ -112,7 +112,11 @@ function AdminDashboardContent() {
   });
 
   // Auth & Admin Role verification loader
-  if (!mounted || !isAuthenticated || (role && role.toUpperCase() !== "ADMIN")) {
+  if (
+    !mounted ||
+    !isAuthenticated ||
+    (role && role.toUpperCase() !== "ADMIN")
+  ) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-3 font-sans">
         <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
@@ -146,7 +150,7 @@ function AdminDashboardContent() {
       <div className="relative overflow-hidden rounded-3xl bg-emerald-800 p-6 sm:p-8 border border-white/10 shadow-xl">
         <div className="relative max-w-6xl space-y-3">
           <h2 className="text-2xl sm:text-3xl font-black capitalize text-white tracking-tight">
-          {displayName}
+            {displayName}
           </h2>
           <p className="text-slate-200 text-xs sm:text-sm leading-relaxed">
             Real-time dispatch telemetry, fleet allocation tracking, platform
@@ -269,9 +273,7 @@ function AdminDashboardContent() {
             </div>
           </div>
           <p className="text-2xl font-black text-slate-900">
-            {isLoading
-              ? "..."
-              : `৳${metrics.totalRevenue.toLocaleString()}`}
+            {isLoading ? "..." : `৳${metrics.totalRevenue.toLocaleString()}`}
           </p>
           <span className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
             <TrendingUp className="w-3 h-3" /> Settled via Gateways
@@ -401,8 +403,8 @@ function AdminDashboardContent() {
                         ride.status === "COMPLETED"
                           ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                           : ride.status === "PENDING"
-                          ? "bg-amber-50 text-amber-700 border border-amber-200"
-                          : "bg-rose-50 text-rose-700 border border-rose-200"
+                            ? "bg-amber-50 text-amber-700 border border-amber-200"
+                            : "bg-rose-50 text-rose-700 border border-rose-200"
                       }`}
                     >
                       {ride.status}

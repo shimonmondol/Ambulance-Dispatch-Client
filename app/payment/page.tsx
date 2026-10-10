@@ -3,20 +3,23 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { 
-  CreditCard, 
-  ArrowLeft, 
-  ShieldCheck, 
-  Lock, 
-  Loader2, 
-  CheckCircle2, 
-  Smartphone
+import {
+  CreditCard,
+  ArrowLeft,
+  ShieldCheck,
+  Lock,
+  Loader2,
+  CheckCircle2,
+  Smartphone,
 } from "lucide-react";
 import { useAuthStore } from "@/lib/useAuthStore";
 import { toast } from "sonner";
 import Footer from "@/components/Footer";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ||
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  "https://ambulance-dispatch-mu.vercel.app";
 
 function PaymentContent() {
   const searchParams = useSearchParams();
@@ -90,14 +93,16 @@ function PaymentContent() {
     try {
       setProcessing(true);
 
-      const activeToken = token || (() => {
-        try {
-          const raw = localStorage.getItem("auth-storage");
-          return raw ? JSON.parse(raw)?.state?.token : null;
-        } catch {
-          return null;
-        }
-      })();
+      const activeToken =
+        token ||
+        (() => {
+          try {
+            const raw = localStorage.getItem("auth-storage");
+            return raw ? JSON.parse(raw)?.state?.token : null;
+          } catch {
+            return null;
+          }
+        })();
 
       const res = await fetch(`${API_BASE}/payment/ssl-init`, {
         method: "POST",
@@ -115,7 +120,9 @@ function PaymentContent() {
         window.location.href = gatewayUrl;
         return;
       }
-      throw new Error(json?.message || "Failed to initialize SSLCommerz gateway session");
+      throw new Error(
+        json?.message || "Failed to initialize SSLCommerz gateway session",
+      );
     } catch (err: any) {
       toast.error(err.message || "Payment gateway connection error");
       setProcessing(false);
@@ -126,7 +133,9 @@ function PaymentContent() {
     return (
       <div className="py-24 flex flex-col items-center justify-center text-slate-500 font-sans">
         <Loader2 className="w-10 h-10 animate-spin text-rose-600 mb-3" />
-        <p className="text-xs font-semibold">Verifying secure session & loading ride...</p>
+        <p className="text-xs font-semibold">
+          Verifying secure session & loading ride...
+        </p>
       </div>
     );
   }
@@ -143,7 +152,6 @@ function PaymentContent() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-        
         {/* Left Column: SSLCommerz Payment Card */}
         <div className="md:col-span-7 space-y-6">
           <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
@@ -152,7 +160,9 @@ function PaymentContent() {
                 <span className="text-[10px] font-black uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-full">
                   Secure Checkout
                 </span>
-                <h1 className="text-xl font-black text-slate-900 mt-1">Payment Checkout</h1>
+                <h1 className="text-xl font-black text-slate-900 mt-1">
+                  Payment Checkout
+                </h1>
               </div>
               <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                 <Lock className="w-5 h-5" />
@@ -170,13 +180,17 @@ function PaymentContent() {
               {rideDetails?.pickupAddress && (
                 <div className="flex items-start justify-between text-slate-500 gap-4">
                   <span>Pickup</span>
-                  <span className="font-semibold text-slate-800 text-right">{rideDetails.pickupAddress}</span>
+                  <span className="font-semibold text-slate-800 text-right">
+                    {rideDetails.pickupAddress}
+                  </span>
                 </div>
               )}
               {rideDetails?.destination && (
                 <div className="flex items-start justify-between text-slate-500 gap-4">
                   <span>Destination</span>
-                  <span className="font-semibold text-slate-800 text-right">{rideDetails.destination}</span>
+                  <span className="font-semibold text-slate-800 text-right">
+                    {rideDetails.destination}
+                  </span>
                 </div>
               )}
             </div>
@@ -193,8 +207,12 @@ function PaymentContent() {
                     <Smartphone className="w-5 h-5 text-rose-600" />
                   </div>
                   <div>
-                    <p className="font-black text-xs text-slate-900">SSLCommerz Secured Gateway</p>
-                    <p className="text-[11px] text-slate-500">bKash, Nagad, Rocket, Cards & Internet Banking</p>
+                    <p className="font-black text-xs text-slate-900">
+                      SSLCommerz Secured Gateway
+                    </p>
+                    <p className="text-[11px] text-slate-500">
+                      bKash, Nagad, Rocket, Cards & Internet Banking
+                    </p>
                   </div>
                 </div>
                 <CheckCircle2 className="w-5 h-5 text-rose-600" />
@@ -230,7 +248,9 @@ function PaymentContent() {
             <div className="space-y-2 text-xs text-slate-600">
               <div className="flex justify-between">
                 <span>Ambulance Fare</span>
-                <span className="font-semibold text-slate-800">৳{finalAmount}</span>
+                <span className="font-semibold text-slate-800">
+                  ৳{finalAmount}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span>Emergency Priority Dispatch</span>
@@ -244,11 +264,12 @@ function PaymentContent() {
 
             <div className="pt-3 border-t border-dashed border-slate-200 flex justify-between items-center text-sm">
               <span className="font-black text-slate-900">Total Payable</span>
-              <span className="font-black text-rose-600 text-lg">৳{finalAmount} BDT</span>
+              <span className="font-black text-rose-600 text-lg">
+                ৳{finalAmount} BDT
+              </span>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
@@ -258,7 +279,13 @@ export default function PaymentPage() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 font-sans antialiased">
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <Suspense fallback={<div className="py-20 text-center text-xs text-slate-400">Loading checkout...</div>}>
+        <Suspense
+          fallback={
+            <div className="py-20 text-center text-xs text-slate-400">
+              Loading checkout...
+            </div>
+          }
+        >
           <PaymentContent />
         </Suspense>
       </main>

@@ -49,7 +49,7 @@ export default function ServicesPage() {
         setLoading(true);
         setError(null);
         const baseUrl =
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+          process.env.NEXT_PUBLIC_API_URL || "https://ambulance-dispatch-mu.vercel.app";
         const res = await fetch(`${baseUrl}/ambulances`, {
           method: "GET",
           headers: {

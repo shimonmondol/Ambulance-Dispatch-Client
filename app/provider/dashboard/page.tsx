@@ -45,7 +45,7 @@ interface TaskItem {
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:5000";
+  "https://ambulance-dispatch-mu.vercel.app";
 
 function ProviderDashboardContent() {
   const router = useRouter();
@@ -288,7 +288,8 @@ function ProviderDashboardContent() {
               No dispatch missions found
             </p>
             <p className="text-xs text-slate-400">
-              Keep your duty status Online to receive incoming emergency dispatches.
+              Keep your duty status Online to receive incoming emergency
+              dispatches.
             </p>
           </div>
         ) : (
@@ -425,7 +426,8 @@ function ProviderDashboardContent() {
 
             <div className="space-y-3 text-xs text-slate-600">
               <p>
-                Are you sure you want to cancel or reject this emergency ride? This will mark the ride as CANCELLED and free up your vehicle.
+                Are you sure you want to cancel or reject this emergency ride?
+                This will mark the ride as CANCELLED and free up your vehicle.
               </p>
               <div className="p-3 bg-slate-50 rounded-xl space-y-1 text-[11px]">
                 <div>
@@ -433,7 +435,9 @@ function ProviderDashboardContent() {
                   {cancellingTask.pickupAddress}
                 </div>
                 <div>
-                  <span className="font-semibold text-slate-700">Destination:</span>{" "}
+                  <span className="font-semibold text-slate-700">
+                    Destination:
+                  </span>{" "}
                   {cancellingTask.destination}
                 </div>
               </div>

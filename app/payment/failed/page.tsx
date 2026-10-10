@@ -3,20 +3,23 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { 
-  XCircle, 
-  RotateCcw, 
-  ArrowLeft, 
-  Ambulance, 
-  Hash, 
-  AlertTriangle, 
-  CreditCard, 
-  Loader2 
+import {
+  XCircle,
+  RotateCcw,
+  ArrowLeft,
+  Ambulance,
+  Hash,
+  AlertTriangle,
+  CreditCard,
+  Loader2,
 } from "lucide-react";
 import { useAuthStore } from "@/lib/useAuthStore";
 import Footer from "@/components/Footer";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ||
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  "https://ambulance-dispatch-mu.vercel.app";
 
 function PaymentFailedContent() {
   const searchParams = useSearchParams();
@@ -83,7 +86,9 @@ function PaymentFailedContent() {
     return (
       <div className="py-24 flex flex-col items-center justify-center text-slate-500 font-sans">
         <Loader2 className="w-10 h-10 animate-spin text-rose-600 mb-3" />
-        <p className="text-xs font-semibold">Retrieving transaction details...</p>
+        <p className="text-xs font-semibold">
+          Retrieving transaction details...
+        </p>
       </div>
     );
   }
@@ -92,10 +97,8 @@ function PaymentFailedContent() {
 
   return (
     <div className="max-w-xl mx-auto py-8 px-4 font-sans space-y-6">
-      
       {/* Failed Card Container */}
       <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6 text-center">
-        
         {/* Animated Red Badge */}
         <div className="w-20 h-20 bg-rose-50 border border-rose-100 rounded-full flex items-center justify-center mx-auto text-rose-600 shadow-sm animate-in zoom-in-50 duration-300">
           <XCircle className="w-10 h-10" />
@@ -108,14 +111,11 @@ function PaymentFailedContent() {
           <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-3">
             Payment Failed
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            {getReasonMessage()}
-          </p>
+          <p className="text-xs text-slate-500 mt-1">{getReasonMessage()}</p>
         </div>
 
         {/* Transaction Summary Box */}
         <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-4 text-xs space-y-3 text-left">
-          
           <div className="flex items-center justify-between pb-3 border-b border-slate-200/60">
             <span className="text-slate-500 flex items-center gap-1.5">
               <Hash className="w-3.5 h-3.5 text-slate-400" /> Dispatch Ticket ID
@@ -127,11 +127,10 @@ function PaymentFailedContent() {
 
           <div className="flex items-center justify-between pb-3 border-b border-slate-200/60">
             <span className="text-slate-500 flex items-center gap-1.5">
-              <CreditCard className="w-3.5 h-3.5 text-slate-400" /> Payment Gateway
+              <CreditCard className="w-3.5 h-3.5 text-slate-400" /> Payment
+              Gateway
             </span>
-            <span className="font-semibold text-slate-800">
-              SSLCommerz
-            </span>
+            <span className="font-semibold text-slate-800">SSLCommerz</span>
           </div>
 
           {rideDetails && (
@@ -157,7 +156,8 @@ function PaymentFailedContent() {
         <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200/80 text-amber-800 text-[11px] flex items-start gap-2.5 text-left">
           <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <span>
-            No amount was deducted from your account. You can retry with bKash, Nagad, or another card.
+            No amount was deducted from your account. You can retry with bKash,
+            Nagad, or another card.
           </span>
         </div>
 
@@ -176,9 +176,7 @@ function PaymentFailedContent() {
             <ArrowLeft className="w-4 h-4" /> Go to Dashboard
           </Link>
         </div>
-
       </div>
-
     </div>
   );
 }
@@ -187,7 +185,13 @@ export default function PaymentFailedPage() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 font-sans antialiased">
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <Suspense fallback={<div className="py-20 text-center text-xs text-slate-400">Loading error details...</div>}>
+        <Suspense
+          fallback={
+            <div className="py-20 text-center text-xs text-slate-400">
+              Loading error details...
+            </div>
+          }
+        >
           <PaymentFailedContent />
         </Suspense>
       </main>

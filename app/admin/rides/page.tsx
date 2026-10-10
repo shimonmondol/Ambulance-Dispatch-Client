@@ -48,7 +48,7 @@ interface RideLog {
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:5000";
+  "https://ambulance-dispatch-mu.vercel.app";
 
 function AdminRidesContent() {
   const { token, isAuthenticated } = useAuthStore();
@@ -184,7 +184,8 @@ function AdminRidesContent() {
             Global Dispatch & Mission Logs
           </h1>
           <p className="text-xs text-slate-500">
-            Track emergency routes, fare settlements, and supervise active medical transits.
+            Track emergency routes, fare settlements, and supervise active
+            medical transits.
           </p>
         </div>
 
@@ -235,12 +236,16 @@ function AdminRidesContent() {
         {isLoading ? (
           <div className="py-24 flex flex-col items-center justify-center text-slate-500">
             <Loader2 className="w-8 h-8 animate-spin text-rose-600 mb-3" />
-            <p className="text-xs font-semibold">Streaming global dispatches...</p>
+            <p className="text-xs font-semibold">
+              Streaming global dispatches...
+            </p>
           </div>
         ) : isError ? (
           <div className="py-16 text-center space-y-2">
             <AlertCircle className="w-8 h-8 text-rose-500 mx-auto" />
-            <p className="text-sm font-bold text-slate-800">Failed to load dispatch missions</p>
+            <p className="text-sm font-bold text-slate-800">
+              Failed to load dispatch missions
+            </p>
             <p className="text-xs text-slate-400">
               {(error as Error)?.message || "Please check backend connection."}
             </p>
@@ -248,7 +253,9 @@ function AdminRidesContent() {
         ) : filteredRides.length === 0 ? (
           <div className="py-16 text-center space-y-2">
             <Ambulance className="w-8 h-8 text-slate-300 mx-auto" />
-            <p className="text-sm font-bold text-slate-800">No dispatch records found</p>
+            <p className="text-sm font-bold text-slate-800">
+              No dispatch records found
+            </p>
             <p className="text-xs text-slate-400">
               Try adjusting your search criteria or status filter.
             </p>
@@ -272,7 +279,10 @@ function AdminRidesContent() {
                   const isPaid = ride.payment?.status === "PAID";
 
                   return (
-                    <tr key={ride.id} className="hover:bg-slate-50/60 transition">
+                    <tr
+                      key={ride.id}
+                      className="hover:bg-slate-50/60 transition"
+                    >
                       {/* Mission ID & Date */}
                       <td className="py-3.5 px-5">
                         <div className="font-mono font-bold text-slate-900">
@@ -396,7 +406,9 @@ function AdminRidesContent() {
                   {cancellingRide.pickupAddress}
                 </div>
                 <div>
-                  <span className="font-semibold text-slate-700">Destination:</span>{" "}
+                  <span className="font-semibold text-slate-700">
+                    Destination:
+                  </span>{" "}
                   {cancellingRide.destination}
                 </div>
               </div>

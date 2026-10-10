@@ -36,7 +36,7 @@ interface UserItem {
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:5000";
+  "https://ambulance-dispatch-mu.vercel.app";
 
 function AdminUsersContent() {
   const { token, isAuthenticated } = useAuthStore();
@@ -191,7 +191,8 @@ function AdminUsersContent() {
             Accounts & Role Management
           </h1>
           <p className="text-xs text-slate-500">
-            Control platform roles, driver authorizations, and security suspension states.
+            Control platform roles, driver authorizations, and security
+            suspension states.
           </p>
         </div>
 
@@ -247,7 +248,9 @@ function AdminUsersContent() {
         ) : isError ? (
           <div className="py-16 text-center space-y-2">
             <AlertCircle className="w-8 h-8 text-rose-500 mx-auto" />
-            <p className="text-sm font-bold text-slate-800">Failed to load users</p>
+            <p className="text-sm font-bold text-slate-800">
+              Failed to load users
+            </p>
             <p className="text-xs text-slate-400">
               {(error as Error)?.message || "Please check backend connection."}
             </p>
@@ -301,9 +304,7 @@ function AdminUsersContent() {
                       </td>
 
                       {/* Role Static Badge (No Dropdown) */}
-                      <td className="py-3.5 px-4">
-                        {renderRoleBadge(u.role)}
-                      </td>
+                      <td className="py-3.5 px-4">{renderRoleBadge(u.role)}</td>
 
                       {/* Verification Status */}
                       <td className="py-3.5 px-4">
@@ -338,11 +339,13 @@ function AdminUsersContent() {
                       <td className="py-3.5 px-4">
                         {isBanned ? (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
-                            <ShieldAlert className="w-3 h-3 text-rose-600" /> Suspended
+                            <ShieldAlert className="w-3 h-3 text-rose-600" />{" "}
+                            Suspended
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            <UserCheck className="w-3 h-3 text-emerald-600" /> Active
+                            <UserCheck className="w-3 h-3 text-emerald-600" />{" "}
+                            Active
                           </span>
                         )}
                       </td>
