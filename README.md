@@ -10,8 +10,8 @@ A comprehensive admin dashboard ensures platform integrity by providing tools fo
 
 ## 📂 Repository
 
-* Frontend: [https://github.com/shimonmondol/ambulance-dispatch-client](https://www.google.com/url?sa=E&source=gmail&q=https://github.com/shimonmondol/ambulance-dispatch-client)
-* Backend: [https://github.com/shimonmondol/ambulance-dispatch-server](https://www.google.com/search?q=https://github.com/shimonmondol/ambulance-dispatch-server)
+* Frontend: https://github.com/shimonmondol/ambulance-dispatch-client
+* Backend: https://github.com/shimonmondol/ambulance-dispatch-server
 
 ## ✨ Main Features
 
