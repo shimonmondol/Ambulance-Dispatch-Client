@@ -13,7 +13,15 @@ A comprehensive admin dashboard ensures platform integrity by providing tools fo
 * Frontend: https://github.com/shimonmondol/ambulance-dispatch-client
 * Backend: https://github.com/shimonmondol/ambulance-dispatch-server
 
-## ✨ Main Features
+## Main Features
+
+- Book emergency ambulances instantly by category and location
+- View vehicle specs, onboard equipment, and estimated fares
+- Pay securely via SSLCommerz with one-click payment retries
+- Track live dispatch progress from pickup to hospital arrival
+- Manage fleet availability, drivers, and trips via the dashboard
+
+## ✨ Core Features
 
 * 🔐 Multi-Role Authentication & Access Control (Customer, Provider/Driver, Admin)
 * 🚑 Emergency Ambulance Request & Instant Dispatch System
